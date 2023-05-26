@@ -1,0 +1,19 @@
+body{
+    margin: 0;
+    background-color: #D9F3C5;
+  }
+  a.btn {
+    background-color: #690500;
+  }
+  
+  a.btn:hover, a.btn:active {
+    background-color: #690500;
+  }
+
+  container{
+    background-color: #D9F3C5;
+  }
+  .custom-search-input {
+    width: 20px; /* Adjust the width as needed */
+  }
+  

@@ -1,0 +1,44 @@
+<!-- resources/views/application.blade.php
+
+@extends('layouts.bootstrap')
+
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Appliance List') }}
+        </h2>
+    </x-slot>
+
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Quantity 1</th>
+                    <th>Total Quantity</th>
+                    <th>Total Price</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($appliances as $appliance)
+                <tr>
+                    <td>{{ $appliance->user->name }}</td>
+                    <td>{{ $appliance->quantity1 }}</td>
+                    <td>{{ $appliance->totalQuantity }}</td>
+                    <td>{{ $appliance->totalPrice }}</td>
+                    <td>{{ $appliance->created_at }}</td>
+                    <td>
+                        <form action="{{ route('application.destroy', $appliance->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</x-app-layout> -->

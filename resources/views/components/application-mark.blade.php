@@ -1,0 +1,1 @@
+<img src="{{asset('image/logo.png')}}" class="rounded mx-auto d-block" alt="..." style="width:64px">
