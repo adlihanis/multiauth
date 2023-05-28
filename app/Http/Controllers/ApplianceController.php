@@ -91,10 +91,14 @@ public function show($id)
 {
     
     $appliance = Appliance::findOrFail($id);
+    $url = route('application.show', ['id' => $id]); //kena edit
+    $qrCode = QrCode::generate($url);
+    $filename = Str::random(10) . '.svg';
+    Storage::disk('public')->put($filename, $qrCode);
     
     // Check if the user has the required role or is the owner of the application
     if (auth()->user()->role == 1 || auth()->user()->role == 2 || auth()->user()->id == $appliance->user_id) {
-        return view('application', compact('appliance'));
+        return view('application', compact('appliance','url' ,'filename','qrCode'));
     }
     
     // If the user doesn't have the required role or ownership, you can redirect or display an error message
@@ -129,14 +133,8 @@ public function reject($id)
     } else {
         $appliances = Appliance::where('user_id', $userId)->where('approval_status', '!=', 'pending')->get();
     }
-    
 
-    $url = route('application.show', ['id' => $userId]); //kena edit
-    $qrCode = QrCode::generate($url);
-    $filename = Str::random(10) . '.svg';
-    Storage::disk('public')->put($filename, $qrCode);
-
-    return view('status', compact('appliances', 'qrCode', 'url', 'filename'));
+    return view('status', compact('appliances'));
 }
 
 public function search(Request $request)

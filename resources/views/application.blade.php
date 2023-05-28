@@ -10,6 +10,14 @@
     <div class="container">
         <div class="card-header">{{ $appliance->user->name }} - {{ $appliance->created_at }}</div>
         <div class="table-responsive">
+        @if ($appliance->approval_status === 'approved')
+    <div class="d-flex flex-column align-items-center">
+    <h1>Your QR Code</h1>
+        <a href="{{ Storage::url($filename) }}" download>{{ $qrCode }}</a>
+        <p>Click on the QR Code to save it</p>
+    </div>
+@endif
+
             <table class="table table-striped">
                 <thead>
                     <tr>
