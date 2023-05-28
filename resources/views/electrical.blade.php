@@ -58,7 +58,7 @@
                             ELECTRIC KETTLE
                         </td>
                         <td>
-                            Only boil water when needed and adequately. Do not leave your room when boiling waterto avoid reboiling the water.
+                            Only boil water when needed and adequately. Do not leave your room when boiling water to avoid reboiling the water.
                         </td>
                         <td>
                             <input type="number" name="quantity[2]" class="form-control" min="0" value="0">

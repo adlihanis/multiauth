@@ -1,4 +1,3 @@
-
 @extends('layouts.bootstrap')
 
 <x-app-layout>
@@ -8,10 +7,9 @@
         </h2>
     </x-slot>
 
-    <!-- resources/views/appliances/create.blade.php -->
-
     <div class="container">
         <div class="card-header">{{ $appliance->user->name }} - {{ $appliance->created_at }}</div>
+        <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -50,7 +48,6 @@
                             <span id="rate2">15</span> <!-- Rate for Item 2 -->
                         </td>
                     </tr>
-                    <!-- Add more table rows for additional images, names/titles, descriptions, quantities, prices, and statuses -->
                     <tr>
                         <td>
                             <img src="{{ asset('image/iron kettle.jpg') }}" alt="Image 3" width="100">
@@ -65,6 +62,7 @@
                              <span id="rate3">10</span> <!-- Rate for Item 3 -->
                         </td>
                     </tr>
+                    <!-- Add more table rows for additional images, names/titles, descriptions, quantities, prices, and statuses -->
                     <tr>
                         <td>
                             <img src="{{ asset('image/toaster.png') }}" alt="Image 4" width="100">
@@ -150,61 +148,62 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td colspan="2">
                             <strong>Total Quantity:</strong>
                         </td>
-                        <td>
+                        <td colspan="2">
                             {{ $appliance->totalQuantity }}
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td colspan="2">
                             <strong>Total Price:</strong>
                         </td>
-                        <td>
+                        <td colspan="2">
                             {{ $appliance->totalPrice }}
                         </td>
                     </tr>
                     <tr>
-                    <td>
+                        <td colspan="2">
                             <strong>Status:</strong>
                         </td>
-                        <td>
-                                    @if ($appliance->approval_status === 'approved')
-                                        <span class="text-success">Approved</span>
-                                    @elseif ($appliance->approval_status === 'rejected')
-                                        <span class="text-danger">Rejected</span>
-                                    @else
-                                        <span class="text-muted">Pending Approval by Staff</span>
-                                    @endif
+                        <td colspan="2">
+                            @if ($appliance->approval_status === 'approved')
+                                <span class="text-success">Approved</span>
+                            @elseif ($appliance->approval_status === 'rejected')
+                                <span class="text-danger">Rejected</span>
+                            @else
+                                <span class="text-muted">Pending Approval by Staff</span>
+                            @endif
                         </td>
                     </tr>
-                        <td>
+                    <tr>
+                        <td colspan="2">
                             <strong>Action:</strong>
                         </td>
-                                <td>
-                                    @if ((Auth::user()->role == '2' || Auth::user()->role == '1') && $appliance->approval_status === 'pending')
-                                        <form method="POST" action="{{ route('approve', ['id' => $appliance->id]) }}">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn btn-success">Approve</button>
-                                        </form>
-                                        <form method="POST" action="{{ route('reject', ['id' => $appliance->id]) }}">
-                                            @csrf
-                                            @method('PUT')
-                                            <button type="submit" class="btn btn-danger">Reject</button>
-                                        </form>
-                                    @endif
-</br>
-                                    <form method="POST" action="{{ route('delete', ['id' => $appliance->id]) }}" class="d-inline">
-                                     @csrf
-                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-secondary">Delete</button>
-                                    </form>
-                                </td>
+                        <td colspan="2">
+                            @if ((Auth::user()->role == '2' || Auth::user()->role == '1') && $appliance->approval_status === 'pending')
+                                <form method="POST" action="{{ route('approve', ['id' => $appliance->id]) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-success">Approve</button>
+                                </form>
+                                <form method="POST" action="{{ route('reject', ['id' => $appliance->id]) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-danger">Reject</button>
+                                </form>
+                            @endif
+                            <br>
+                            <form method="POST" action="{{ route('delete', ['id' => $appliance->id]) }}" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-secondary">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
-        </form>
-        </tbody>
+        </div>
     </div>
-
 </x-app-layout>

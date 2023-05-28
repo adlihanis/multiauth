@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Appliance; // Assuming you have an Appliance model
 use App\Models\Users;
 use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ApplianceController extends Controller
 {
@@ -85,8 +89,17 @@ public function showAll()
 
 public function show($id)
 {
+    
     $appliance = Appliance::findOrFail($id);
-    return view('application', compact('appliance'));
+    
+    // Check if the user has the required role or is the owner of the application
+    if (auth()->user()->role == 1 || auth()->user()->role == 2 || auth()->user()->id == $appliance->user_id) {
+        return view('application', compact('appliance'));
+    }
+    
+    // If the user doesn't have the required role or ownership, you can redirect or display an error message
+    // For example:
+    return redirect()->back()->with('error', 'You are not authorized to view this page.');
     
 }
 public function approve($id)
@@ -107,6 +120,7 @@ public function reject($id)
     }
     public function status()
 {
+    
     $userId = auth()->user()->id;
     $userRole = auth()->user()->role;
 
@@ -115,8 +129,14 @@ public function reject($id)
     } else {
         $appliances = Appliance::where('user_id', $userId)->where('approval_status', '!=', 'pending')->get();
     }
+    
 
-    return view('status', compact('appliances'));
+    $url = route('application.show', ['id' => $userId]); //kena edit
+    $qrCode = QrCode::generate($url);
+    $filename = Str::random(10) . '.svg';
+    Storage::disk('public')->put($filename, $qrCode);
+
+    return view('status', compact('appliances', 'qrCode', 'url', 'filename'));
 }
 
 public function search(Request $request)
@@ -129,4 +149,9 @@ public function search(Request $request)
 
         return view('showlist', compact('appliances', 'search'));
     }
+
+public function __construct()
+{
+    $this->middleware('auth');
+}
 }

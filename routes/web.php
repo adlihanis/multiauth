@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ApplianceController;
+use App\Http\Controllers\PDFController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -53,3 +54,11 @@ Route::delete('/delete/{id}', [ApplianceController::class, 'delete'])->name('del
 //search
 Route::get('/search', [ApplianceController::class, 'search'])->name('application.search');
 // Route::get('/showlist', [ApplianceController::class, 'showList'])->name('application.showList');
+
+
+// Route::get('/application', function () {
+//     return view('/application');
+// });
+// Route::get('/qrcode', [QrCodeController::class, 'generateQrCode']);
+
+
