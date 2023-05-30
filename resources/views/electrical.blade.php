@@ -237,6 +237,7 @@
 
             <div class="text-right">
                 <button type="button" class="btn btn-success" id="sendApproval">Send for Approval</button>
+                
             </div>
         </form>
     </div>
@@ -301,14 +302,14 @@
     calculateTotal();
 
     const sendApprovalButton = document.getElementById('sendApproval');
-sendApprovalButton.addEventListener('click', function() {
+    sendApprovalButton.addEventListener('click', function() {
     // Set the values of the hidden input fields
     document.getElementById('totalQuantityInput').value = document.getElementById('totalQuantity').innerText;
     document.getElementById('totalPriceInput').value = document.getElementById('totalPrice').innerText;
 
     document.getElementById('createApplianceForm').submit();
     // Perform the necessary logic to trigger the approval process
-    alert('Application sent for approval!');
+    alert('Please make payment in the Application List tab to proceed with the approval process');
 });
 </script>
 </x-app-layout>

@@ -10,6 +10,8 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Stripe\Checkout\Session;
+use Stripe\Stripe;
 
 class ApplianceController extends Controller
 {
@@ -152,4 +154,80 @@ public function __construct()
 {
     $this->middleware('auth');
 }
+public function checkout($id)
+{
+    $appliance = Appliance::find($id);
+    $totalPrice = $appliance->totalPrice;
+
+    Stripe::setApiKey(env('STRIPE_SECRET'));
+    // Create a new Stripe Checkout Session
+    $session = Session::create([
+        'payment_method_types' => ['card'],
+        'line_items' => [
+            [
+                'price_data' => [
+                    'currency' => 'myr',
+                    'product_data' => [
+                        'name' => 'Please Pay This Amount to Proceed',
+                    ],
+                    'unit_amount' => $totalPrice * 100, // The price in cents
+                ],
+                'quantity' => 1,
+            ],
+        ],
+        'mode' => 'payment',
+        'success_url' => route('checkout.success', ['id' => $id]),
+        'cancel_url' => route('checkout.cancel', ['id' => $id]),
+    ]);
+
+    $appliance->payment_status = 'pending';
+    $appliance->save();
+
+    // Redirect the user to the Stripe Checkout page
+    return redirect($session->url)->with('appliance', $appliance)->with('sessionId', $session->id);
+}
+
+public function success($id)
+{
+    // Handle successful payment
+
+    // Retrieve the appliance from the database based on the ID if needed
+    $appliance = Appliance::find($id);
+    $appliance = session('appliance');
+    $sessionId = session('sessionId');
+
+    // Verify the session with Stripe to ensure the payment was successful
+    Stripe::setApiKey(env('STRIPE_SECRET'));
+    $session = Session::retrieve($sessionId);
+
+    if ($session->payment_status === 'paid') {
+        // Update the payment_status to successful
+        $appliance->payment_status = 'successful';
+        $appliance->save();
+    } else {
+        // Handle payment failure or other error scenarios
+        // You can redirect to an error page or take appropriate action here
+    }
+
+    // Clear the session data
+    session()->forget(['appliance', 'sessionId']);
+
+    // Redirect to a success page or perform any other necessary actions
+    // ...
+
+    return redirect('status')->with('appliances', $appliance);
+}
+
+public function cancel($id)
+{
+    // Handle cancelled payment
+
+    // Retrieve the appliance from the database based on the ID if needed
+    $appliance = Appliance::find($id);
+
+    return view('cancel')->with('appliance', $appliance);
+}
+
+
+
 }

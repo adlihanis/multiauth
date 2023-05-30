@@ -186,6 +186,21 @@
                         </td>
                     </tr>
                     <tr>
+                    <td colspan="2">
+                            <strong>Payment Status:</strong>
+                        </td>
+                        <td colspan="2">
+                        @if ($appliance->payment_status === 'successful')
+                             <span class="text-success">Successful</span>
+                        @elseif ($appliance->payment_status === 'pending')
+                             <span class="text-warning">Pending</span>
+                        @else
+                             <span class="text-muted">Unknown</span>
+                        @endif
+
+                        </td>
+                    </tr>
+                    <tr>
                         <td colspan="2">
                             <strong>Action:</strong>
                         </td>
@@ -210,6 +225,17 @@
                             </form>
                         </td>
                     </tr>
+                    @if (Auth::user()->role == '0')
+                    <tr>
+                        <td colspan="2">
+                             <strong>Payment Link:</strong>
+                        </td>
+                        <td colspan="2">
+                            <a href="{{ route('checkout', ['id' => $appliance->id]) }}">Proceed to Checkout</a>
+                        </td>
+                    </tr>
+                    @endif
+
                 </tbody>
             </table>
         </div>

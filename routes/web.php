@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ApplianceController;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\CheckoutController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -61,4 +62,7 @@ Route::get('/search', [ApplianceController::class, 'search'])->name('application
 // });
 // Route::get('/qrcode', [QrCodeController::class, 'generateQrCode']);
 
+Route::get('/checkout/{id}', [ApplianceController::class, 'checkout'])->name('checkout');
+Route::get('/checkout/success/{id}', [ApplianceController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/cancel/{id}', [ApplianceController::class, 'cancel'])->name('checkout.cancel');
 
