@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Electric;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -41,11 +42,6 @@ class HomeController extends Controller
         {
             return view ('dashboard');
         }
-    }
-
-    public function electric ()
-    {
-        return view ('electrical');
     }
 
     public function application()

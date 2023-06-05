@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Appliance; // Assuming you have an Appliance model
-use App\Models\Users;
+use App\Models\User;
+use App\Models\Electric;
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\URL;
@@ -12,48 +13,51 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
+use App\Notifications\ApplicationPendingNotification;
+use Illuminate\Support\Facades\Notification;
 
 class ApplianceController extends Controller
 {
     public function store(Request $request)
-    {
-        $totalQuantity = $request->input('totalQuantity');
-        $totalPrice = $request->input('totalPrice');
-        $quantity1 = $request->input('quantity.1');
-        $quantity2 = $request->input('quantity.2');
-        $quantity3 = $request->input('quantity.3');
-        $quantity4 = $request->input('quantity.4');
-        $quantity5 = $request->input('quantity.5');
-        $quantity6 = $request->input('quantity.6');
-        $quantity7 = $request->input('quantity.7');
-        $quantity8 = $request->input('quantity.8');
-        $quantity9 = $request->input('quantity.9');
+{
+    $totalQuantity = $request->input('totalQuantity');
+    $totalPrice = $request->input('totalPrice');
+    $quantities = $request->input('quantity');
 
+    // Save the totalQuantity and totalPrice to the database
+    // You can create a new record or update an existing one, depending on your requirements
 
-        // Save the totalQuantity and totalPrice to the database
-        // You can create a new record or update an existing one, depending on your requirements
+    // Example: Creating a new Appliance record
+    $appliance = new Appliance();
+    $appliance->approval_status = 'pending';
+    
+    // Save the quantities to the respective columns in the database
+    $appliance->quantity1 = $quantities[0];
+    $appliance->quantity2 = $quantities[1];
+    $appliance->quantity3 = $quantities[2];
+    $appliance->quantity4 = $quantities[3];
+    $appliance->quantity5 = $quantities[4];
+    $appliance->quantity6 = $quantities[5];
+    $appliance->quantity7 = $quantities[6];
+    $appliance->quantity8 = $quantities[7];
+    $appliance->quantity9 = $quantities[8];
+    
+    $appliance->totalQuantity = $totalQuantity;
+    $appliance->totalPrice = $totalPrice;
+    $appliance->user_id = auth()->user()->id;
+    $appliance->save();
 
-        // Example: Creating a new Appliance record
-        $appliance = new Appliance();
-        $appliance->approval_status = 'pending';
-        $appliance->quantity1 = $quantity1;
-        $appliance->quantity2 = $quantity2;
-        $appliance->quantity3 = $quantity3;
-        $appliance->quantity4 = $quantity4;
-        $appliance->quantity5 = $quantity5;
-        $appliance->quantity6 = $quantity6;
-        $appliance->quantity7 = $quantity7;
-        $appliance->quantity8 = $quantity8;
-        $appliance->quantity9 = $quantity9;
-        $appliance->totalQuantity = $totalQuantity;
-        $appliance->totalPrice = $totalPrice;
-        $appliance->user_id = auth()->user()->id;
-        $appliance->save();
-
-        // Redirect or return a response
-        // You can redirect to a success page or return a JSON response, depending on your needs
-        return redirect('/addelectric');
+    // Send a notification to users with role=2 (assuming role=2 represents the user's role)
+    if (auth()->user()->role == 0) {
+        $usersWithRole2 = User::where('role', 2)->get();
+        $notification = new ApplicationPendingNotification();
+        Notification::send($usersWithRole2, $notification);
     }
+
+    // Redirect or return a response
+    // You can redirect to a success page or return a JSON response, depending on your needs
+    return redirect('Electric');
+}
 
     public function application()
 {
@@ -93,6 +97,8 @@ public function show($id)
 {
     
     $appliance = Appliance::findOrFail($id);
+    $electrics = Electric::all(); 
+
     $url = route('application.show', ['id' => $id]); //kena edit
     $qrCode = QrCode::generate($url);
     $filename = Str::random(10) . '.svg';
@@ -100,7 +106,7 @@ public function show($id)
     
     // Check if the user has the required role or is the owner of the application
     if (auth()->user()->role == 1 || auth()->user()->role == 2 || auth()->user()->id == $appliance->user_id) {
-        return view('application', compact('appliance','url' ,'filename','qrCode'));
+        return view('application', compact('appliance','url' ,'filename','qrCode','electrics'));
     }
     
     // If the user doesn't have the required role or ownership, you can redirect or display an error message
@@ -140,15 +146,20 @@ public function reject($id)
 }
 
 public function search(Request $request)
-    {
-        $search = $request->input('search');
-        
-        $appliances = Appliance::whereHas('user', function ($query) use ($search) {
-            $query->where('name', 'like', "%$search%");
-        })->get();
+{
+    $search = $request->input('search');
 
-        return view('showlist', compact('appliances', 'search'));
+    // Perform validation
+    if (strpos($search, '@') === false) {
+        return back()->withErrors(['search' => 'Search input must contain the @ symbol.'])->withInput();
     }
+
+    $appliances = Appliance::whereHas('user', function ($query) use ($search) {
+        $query->where('email', 'like', "%$search%");
+    })->get();
+
+    return view('showlist', compact('appliances', 'search'));
+}
 
 public function __construct()
 {

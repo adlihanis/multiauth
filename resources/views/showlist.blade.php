@@ -10,14 +10,14 @@
     <div class="container">
         <form action="{{ route('application.search') }}" method="GET" class="mb-3">
             <div class="input-group">
-                <input type="text" name="search" class="form-control custom-search-input" placeholder="Search by name" value="{{ $search }}" required>
+                <input type="email" name="search" class="form-control custom-search-input" placeholder="Search by email must put @" value="{{ $search }}" required>
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </form>
 
         @if ($search)
             <div class="mb-3">
-                <a href="{{ route('application.showList') }}" class="btn btn-secondary">Clear Search</a>
+                <a href="{{ route('application') }}" class="btn btn-secondary">Clear Search</a>
             </div>
         @endif
 
@@ -32,7 +32,7 @@
                 <tr>
                     <td>
                         <button type="button" class="btn btn-primary" onclick="location.href='{{ route('application.show', ['id' => $appliance->id]) }}'">
-                            {{ $appliance->user->name }} - {{ $appliance->created_at }}
+                            {{ $appliance->user->email }} - {{ $appliance->user->block }} - {{ $appliance->user->room }} - {{ $appliance->created_at }}
                         </button>
                     </td>
                 </tr>

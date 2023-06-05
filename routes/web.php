@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ApplianceController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\NewElectricController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -66,3 +68,7 @@ Route::get('/checkout/{id}', [ApplianceController::class, 'checkout'])->name('ch
 Route::get('/checkout/success/{id}', [ApplianceController::class, 'success'])->name('checkout.success');
 Route::get('/checkout/cancel/{id}', [ApplianceController::class, 'cancel'])->name('checkout.cancel');
 
+Route::get('/newElectric', [NewElectricController::class, 'index'])->name('index');
+Route::get('/Electric', [NewElectricController::class, 'electric'])->name('electric');
+
+Route::resource("/electric", NewElectricController::class);

@@ -18,8 +18,14 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link href="{{ asset('#') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Staff') }}
+                    <x-nav-link href="{{ asset('Electric') }}" :active="request()->routeIs('dashboard')">
+                        {{ __('Electrical Appliances') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link href="{{ asset('newElectric') }}" :active="request()->routeIs('dashboard')">
+                        {{ __('Adding Electrical Appliances') }}
                     </x-nav-link>
                 </div>
 

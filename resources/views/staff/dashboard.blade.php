@@ -3,6 +3,7 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('KOLEJ TUN DR ISMAIL') }}
         </h2>
+        
     </x-slot>
 
 @extends('layouts.bootstrap')

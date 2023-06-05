@@ -14,6 +14,10 @@ class Appliance extends Model
         'quantity1',
         'approval_status',
         'content',
+        'image',
+        'item',
+        'description',
+        'rate',
     ];
 
     public function user()
