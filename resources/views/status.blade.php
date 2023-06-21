@@ -1,13 +1,18 @@
-@extends('layouts.bootstrap')
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Application Status') }}
         </h2>
     </x-slot>
+    <div class="container-fluid bg mt-2">
 
-    <div class="container">
+@extends('layouts.bootstrap')
+@include('layouts.style')
+@extends('layouts.footer')
+@extends('layouts.bar')
+   
+@section('content')
+    
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>

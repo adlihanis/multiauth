@@ -19,7 +19,7 @@ use App\Http\Controllers\NewElectricController;
 */
 
 Route::get('/', function () {
-     return view('welcome');
+     return view('auth.login');
 });
 
 Route::middleware([
@@ -37,6 +37,11 @@ Route::get('addelectric', 'App\Http\Controllers\HomeController@electric')->name(
 Route::post('addelectric', 'App\Http\Controllers\HomeController@electric')->name('electric');
 Route::get('application', 'App\Http\Controllers\HomeController@application');
 Route::get('status', 'App\Http\Controllers\HomeController@status')->name('status');
+Route::get('staff', 'App\Http\Controllers\HomeController@see')->name('see');
+Route::get('all', 'App\Http\Controllers\HomeController@seeAll')->name('seeAll');
+Route::get('admin', 'App\Http\Controllers\HomeController@seeAdmin')->name('seeAdmin');
+Route::get('student', 'App\Http\Controllers\HomeController@seeStudent')->name('seeStudent');
+
 
 Route::post('/appliances', [ApplianceController::class, 'store']);
 Route::get('/application', 'App\Http\Controllers\ApplianceController@application')->name('application');
@@ -57,7 +62,7 @@ Route::delete('/delete/{id}', [ApplianceController::class, 'delete'])->name('del
 //search
 Route::get('/search', [ApplianceController::class, 'search'])->name('application.search');
 // Route::get('/showlist', [ApplianceController::class, 'showList'])->name('application.showList');
-
+Route::get('/search/home', [HomeController::class, 'search'])->name('home.search');
 
 // Route::get('/application', function () {
 //     return view('/application');
@@ -67,8 +72,16 @@ Route::get('/search', [ApplianceController::class, 'search'])->name('application
 Route::get('/checkout/{id}', [ApplianceController::class, 'checkout'])->name('checkout');
 Route::get('/checkout/success/{id}', [ApplianceController::class, 'success'])->name('checkout.success');
 Route::get('/checkout/cancel/{id}', [ApplianceController::class, 'cancel'])->name('checkout.cancel');
+Route::get('/receipt/{id}', [ApplianceController::class, 'receipt'])->name('receipt');
+
 
 Route::get('/newElectric', [NewElectricController::class, 'index'])->name('index');
 Route::get('/Electric', [NewElectricController::class, 'electric'])->name('electric');
 
 Route::resource("/electric", NewElectricController::class);
+
+Route::delete('/adminusers/{id}', [HomeController::class, 'destroyAdminUser'])->name('adminusers.destroy');
+Route::delete('/staffusers/{id}', [HomeController::class, 'destroyStaffUser'])->name('staffusers.destroy');
+Route::delete('/allusers/{id}', [HomeController::class, 'destroyAllUser'])->name('allusers.destroy');
+Route::delete('/studentusers/{id}', [HomeController::class, 'destroyStudentUser'])->name('studentusers.destroy');
+Route::post('/allusers/{user}/changerole', [HomeController::class, 'changeRole'])->name('allusers.rolechange');

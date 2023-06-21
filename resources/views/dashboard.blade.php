@@ -5,12 +5,13 @@
         </h2>
     </x-slot>
 
+    <div class="container-fluid bg mt-2">
+
 @extends('layouts.bootstrap')
 @include('layouts.style')
 @extends('layouts.footer')
 @extends('layouts.bar')
-
-
+   
 @section('content')
 
     <main class="col-md-12 ms-sm-auto col-lg-14 px-md-4 ">
@@ -29,5 +30,5 @@
         </section>
 
 </main>
-
+</div>
 </x-app-layout>

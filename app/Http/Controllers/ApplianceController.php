@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Appliance; // Assuming you have an Appliance model
+use App\Models\Appliance; 
 use App\Models\User;
 use App\Models\Electric;
 use Illuminate\Support\Facades\Auth;
@@ -13,8 +13,10 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
+use Stripe\Charge;
 use App\Notifications\ApplicationPendingNotification;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\ApplicationApprovedNotification;
 
 class ApplianceController extends Controller
 {
@@ -25,9 +27,9 @@ class ApplianceController extends Controller
     $quantities = $request->input('quantity');
 
     // Save the totalQuantity and totalPrice to the database
-    // You can create a new record or update an existing one, depending on your requirements
+    
 
-    // Example: Creating a new Appliance record
+    
     $appliance = new Appliance();
     $appliance->approval_status = 'pending';
     
@@ -47,7 +49,7 @@ class ApplianceController extends Controller
     $appliance->user_id = auth()->user()->id;
     $appliance->save();
 
-    // Send a notification to users with role=2 (assuming role=2 represents the user's role)
+    // Send a notification to users with role=2 
     if (auth()->user()->role == 0) {
         $usersWithRole2 = User::where('role', 2)->get();
         $notification = new ApplicationPendingNotification();
@@ -55,7 +57,7 @@ class ApplianceController extends Controller
     }
 
     // Redirect or return a response
-    // You can redirect to a success page or return a JSON response, depending on your needs
+    
     return redirect('Electric');
 }
 
@@ -119,7 +121,11 @@ public function approve($id)
         $appliance = Appliance::findOrFail($id);
         $appliance->approval_status = 'approved';
         $appliance->save();
-
+    
+        $user = $appliance->user; // Assuming there is a relationship between the Appliance model and the User model
+    
+        Notification::send($user, new ApplicationApprovedNotification);
+    
         return redirect()->route('application')->with('success', 'Application approved successfully.');
     }
 public function reject($id)
@@ -158,8 +164,16 @@ public function search(Request $request)
         $query->where('email', 'like', "%$search%");
     })->get();
 
-    return view('showlist', compact('appliances', 'search'));
+    $notFoundMessage = '';
+
+    if ($appliances->isEmpty()) {
+        $notFoundMessage = 'No results found for the search term.';
+    }
+
+    return view('showlist', compact('appliances', 'notFoundMessage', 'search'));
 }
+
+
 
 public function __construct()
 {
@@ -214,11 +228,13 @@ public function success($id)
     if ($session->payment_status === 'paid') {
         // Update the payment_status to successful
         $appliance->payment_status = 'successful';
+        $appliance->payment_time = now();
         $appliance->save();
     } else {
         // Handle payment failure or other error scenarios
         // You can redirect to an error page or take appropriate action here
     }
+
 
     // Clear the session data
     session()->forget(['appliance', 'sessionId']);
@@ -238,7 +254,9 @@ public function cancel($id)
 
     return view('cancel')->with('appliance', $appliance);
 }
-
-
-
+ public function receipt($id)
+    {
+        $appliance = Appliance::find($id);
+        return view('receipt')->with('appliance', $appliance);
+    }
 }

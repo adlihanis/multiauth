@@ -29,6 +29,7 @@ class CreateAppliancesTable extends Migration
             $table->longText('content')->nullable();
             $table->string('approval_status')->default('pending');
             $table->string('payment_status')->default('pending');
+            $table->timestamp('payment_time')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

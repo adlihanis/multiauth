@@ -53,4 +53,112 @@ class HomeController extends Controller
         return view('status');
     }
 
+    public function see()
+    {
+        $staffUsers = DB::table('users')->where('role', '2')->get();
+        return view('admin.staffview', compact('staffUsers'));
+    }
+    public function destroyStaffUser(Request $request, $id)
+    {
+        // Find the staff user by ID
+        $staffUser = User::findOrFail($id);
+
+        // Delete the staff user
+        $staffUser->delete();
+
+        // Redirect to the appropriate page or perform any other actions
+        return redirect()->back()->with('success', 'Staff user deleted successfully.');
+    }
+    public function seeAll()
+    {
+        $allUsers = DB::table('users')->get();
+        $search = '';
+        return view('admin.allview', compact('allUsers','search'));
+    }
+    public function destroyAllUser(Request $request, $id)
+    {
+        // Find the staff user by ID
+        $allUser = User::findOrFail($id);
+
+        // Delete the staff user
+        $allUser->delete();
+
+        // Redirect to the appropriate page or perform any other actions
+        return redirect()->back()->with('success', 'Student user deleted successfully.');
+    }
+
+    public function seeAdmin()
+    {
+        $adminUsers = DB::table('users')->where('role', '1')->get();
+        return view('admin.adminview', compact('adminUsers'));
+    }
+    public function destroyAdminUser(Request $request, $id)
+    {
+        // Find the staff user by ID
+        $adminUser = User::findOrFail($id);
+
+        // Delete the staff user
+        $adminUser->delete();
+
+        // Redirect to the appropriate page or perform any other actions
+        return redirect()->back()->with('success', 'Admin user deleted successfully.');
+    }
+    public function seeStudent()
+    {
+        $studentUsers = DB::table('users')->where('role', '0')->get();
+        return view('admin.studentview', compact('studentUsers'));
+    }
+    public function destroyStudentUser(Request $request, $id)
+    {
+        // Find the staff user by ID
+        $studentUser = User::findOrFail($id);
+
+        // Delete the staff user
+        $studentUser->delete();
+
+        // Redirect to the appropriate page or perform any other actions
+        return redirect()->back()->with('success', 'Staff user deleted successfully.');
+    }
+    public function changeRole(Request $request, $userId)
+    {
+        $user = User::findOrFail($userId);
+        $role = $request->input('role');
+
+        // Update the user's role based on the value provided
+        switch ($role) {
+            case '1':
+                $user->role = 1;
+                break;
+            case '2':
+                $user->role = 2;
+                break;
+            default:
+                // Handle invalid role value
+                return redirect()->back()->with('error', 'Invalid role value.');
+        }
+
+        $user->save();
+
+        // Redirect back to the previous page with a success message
+        return redirect()->back()->with('success', 'User role updated successfully.');
+    }
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+    
+        // Perform validation
+        if (strpos($search, '@') === false) {
+            return back()->withErrors(['search' => 'Search input must contain the @ symbol.'])->withInput();
+        }
+    
+        $allUsers = User::where('email', 'like', "%$search%")->get();
+    
+        $notFoundMessage = '';
+    
+        if ($allUsers->isEmpty()) {
+            $notFoundMessage = 'No results found for the search term.';
+        }
+    
+        return view('admin.allview', compact('allUsers', 'notFoundMessage', 'search'));
+    }
 }

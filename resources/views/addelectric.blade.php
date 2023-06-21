@@ -1,17 +1,20 @@
-@extends('layouts.design')
-
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('ELECTRICAL APPLIANCES EDITABLE PAGE') }}
         </h2>
     </x-slot>
-
-    <div class="container">
+    <div class="container-fluid bg mt-2">
+    <title>KTDI | Edit Page</title>
+@extends('layouts.bootstrap')
+@include('layouts.style')
+@extends('layouts.footer')
+@extends('layouts.bar')
+   
+@section('content')
         <div class="row">
 
-            <div class="col-md-9">
+            <div class="col-md-14">
                     <div class="card-body">
                         <a href="{{ url('/electric/create') }}" class="btn btn-success btn-sm" title="Add New Student">
                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
@@ -26,7 +29,7 @@
                                         <th>Image</th>
                                         <th>Item Name</th>
                                         <th>Description</th>
-                                        <th>Rate</th>
+                                        <th>Rate (RM/Semester)</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -37,7 +40,7 @@
                                         <td><img src= "/image/{{ $item->image }}" alt='image' width=100></td>
                                         <td>{{ $item->item }}</td>
                                         <td>{{ $item->description }}</td>
-                                        <td>{{ $item->rate }}</td>
+                                        <td>{{ $item->rate }}.00</td>
 
                                         <td>
                                             <a href="{{ url('/electric/' . $item->id) }}" title="View Student"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> View</button></a>
@@ -63,6 +66,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
+    
+</div>
 </x-app-layout>

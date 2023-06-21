@@ -44,7 +44,7 @@ class NewElectricController extends Controller
 
     Electric::create($input);
 
-    return redirect('newElectric')->with('flash_message', 'Student Added!');
+    return redirect('newElectric')->with('flash_message', 'New Electric being created!');
 }
 
 
@@ -76,13 +76,13 @@ class NewElectricController extends Controller
 
     $electric->update($input);
 
-    return redirect('newElectric')->with('flash_message', 'Student Updated!');
+    return redirect('newElectric')->with('flash_message', 'Electrical Appliances Updated!');
 }
 
     
     public function destroy(string $id): RedirectResponse
     {
         Electric::destroy($id);
-        return redirect('newElectric')->with('flash_message', 'Student deleted!'); 
+        return redirect('newElectric')->with('flash_message', 'Electrical Appliances deleted!'); 
     }
 }

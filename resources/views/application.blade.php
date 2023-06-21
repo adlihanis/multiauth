@@ -1,11 +1,17 @@
-@extends('layouts.bootstrap')
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('ADD ELECTRICAL APPLIANCES') }}
         </h2>
     </x-slot>
+    <div class="container-fluid bg mt-2">
+    <title>KTDI | Application Page</title>
+@extends('layouts.bootstrap')
+@include('layouts.style')
+@extends('layouts.footer')
+@extends('layouts.bar')
+   
+@section('content')
 
     <div class="container">
         <div class="card-header">{{ $appliance->user->name }} - {{ $appliance->created_at }}</div>
@@ -79,18 +85,18 @@
                         </td>
                     </tr>
                     <tr>
-                    <td colspan="2">
+                        <td colspan="2">
                             <strong>Payment Status:</strong>
                         </td>
                         <td colspan="2">
-                        @if ($appliance->payment_status === 'successful')
-                             <span class="text-success">Successful</span>
-                        @elseif ($appliance->payment_status === 'pending')
-                             <span class="text-warning">Pending</span>
-                        @else
-                             <span class="text-muted">Unknown</span>
-                        @endif
-
+                            @if ($appliance->payment_status === 'successful')
+                                <span class="text-success">Successful</span>
+                                <a href="{{ route('receipt', ['id' => $appliance->id]) }}">Click here</a>
+                            @elseif ($appliance->payment_status === 'pending')
+                                <span class="text-warning">Pending</span>
+                            @else
+                                <span class="text-muted">Unknown</span>
+                            @endif
                         </td>
                     </tr>
                     <tr>
@@ -132,4 +138,5 @@
             </table>
         </div>
     </div>
+</div>
 </x-app-layout>

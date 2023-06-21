@@ -1,4 +1,4 @@
-@extends('layouts.bootstrap')
+
 
 <x-app-layout>
     <x-slot name="header">
@@ -6,8 +6,15 @@
             {{ __('ADD ELECTRICAL APPLIANCES') }}
         </h2>
     </x-slot>
+    <div class="container-fluid bg mt-2">
+    <title>KTDI | Register Appliances</title>
+@extends('layouts.bootstrap')
+@include('layouts.style')
+@extends('layouts.footer')
+@extends('layouts.bar')
+   
+@section('content')
 
-    <div class="container">
 
         <form id="createApplianceForm" action="{{url('/appliances')}}" method="POST" enctype="multipart/form-data">
             @csrf
