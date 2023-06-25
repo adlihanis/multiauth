@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Electric;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Validator;
 
 class NewElectricController extends Controller
 {
@@ -44,7 +45,7 @@ class NewElectricController extends Controller
 
     Electric::create($input);
 
-    return redirect('newElectric')->with('flash_message', 'New Electric being created!');
+    return redirect('newElectric')->with('flash.banner', 'New Electric being created!');
 }
 
 
@@ -61,28 +62,50 @@ class NewElectricController extends Controller
     }
 
     public function update(Request $request, string $id): RedirectResponse
-{
-    $electric = Electric::find($id);
-    $input = $request->all();
-
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $imageName = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('image'), $imageName);
-
-        // Update the filename in the database
-        $input['image'] = $imageName;
+    {
+        $electric = Electric::find($id);
+        $input = $request->all();
+    
+        $rules = [
+            'image' => 'image',
+            'item' => 'required',
+            'description' => 'required',
+            'rate' => 'required|numeric',
+        ];
+    
+        $messages = [
+            'image.image' => 'The image must be a valid image file.',
+            'item.required' => 'The item name is required.',
+            'description.required' => 'The description is required.',
+            'rate.required' => 'The rate is required.',
+            'rate.numeric' => 'The rate must be a number.',
+        ];
+    
+        $validator = Validator::make($input, $rules, $messages);
+    
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+    
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $imageName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('image'), $imageName);
+    
+            // Update the filename in the database
+            $input['image'] = $imageName;
+        }
+    
+        $electric->update($input);
+    
+        return redirect('newElectric')->with('flash.banner', 'Electrical Appliances Updated!');
     }
-
-    $electric->update($input);
-
-    return redirect('newElectric')->with('flash_message', 'Electrical Appliances Updated!');
-}
+    
 
     
     public function destroy(string $id): RedirectResponse
     {
         Electric::destroy($id);
-        return redirect('newElectric')->with('flash_message', 'Electrical Appliances deleted!'); 
+        return redirect('newElectric')->with('flash.banner', 'Electrical Appliances deleted!');
     }
 }

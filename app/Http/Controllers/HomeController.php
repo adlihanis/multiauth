@@ -67,7 +67,7 @@ class HomeController extends Controller
         $staffUser->delete();
 
         // Redirect to the appropriate page or perform any other actions
-        return redirect()->back()->with('success', 'Staff user deleted successfully.');
+        return redirect()->back()->with('flash.banner', 'Staff user deleted successfully.');
     }
     public function seeAll()
     {
@@ -84,7 +84,7 @@ class HomeController extends Controller
         $allUser->delete();
 
         // Redirect to the appropriate page or perform any other actions
-        return redirect()->back()->with('success', 'Student user deleted successfully.');
+        return redirect()->back()->with('flash.banner', 'Student user deleted successfully.');
     }
 
     public function seeAdmin()
@@ -101,7 +101,7 @@ class HomeController extends Controller
         $adminUser->delete();
 
         // Redirect to the appropriate page or perform any other actions
-        return redirect()->back()->with('success', 'Admin user deleted successfully.');
+        return redirect()->back()->with('flash.banner', 'Admin user deleted successfully.');
     }
     public function seeStudent()
     {
@@ -117,7 +117,7 @@ class HomeController extends Controller
         $studentUser->delete();
 
         // Redirect to the appropriate page or perform any other actions
-        return redirect()->back()->with('success', 'Staff user deleted successfully.');
+        return redirect()->back()->with('flash.banner', 'Staff user deleted successfully.');
     }
     public function changeRole(Request $request, $userId)
     {
@@ -134,13 +134,13 @@ class HomeController extends Controller
                 break;
             default:
                 // Handle invalid role value
-                return redirect()->back()->with('error', 'Invalid role value.');
+                return redirect()->back()->with('flash.banner', 'Invalid role value.');
         }
 
         $user->save();
 
         // Redirect back to the previous page with a success message
-        return redirect()->back()->with('success', 'User role updated successfully.');
+        return redirect()->back()->with('flash.banner', 'User role updated successfully.');
     }
     public function search(Request $request)
     {

@@ -80,14 +80,14 @@ public function destroy($id)
         $appliance = Appliance::findOrFail($id);
         $appliance->delete();
 
-        return redirect()->route('application')->with('success', 'Application deleted successfully.');
+        return redirect()->route('application')->with('flash.banner', 'Application deleted successfully.');
     }
 public function delete($id)
 {
     $appliance = Appliance::findOrFail($id);
     $appliance->delete();
 
-    return redirect()->route('application')->with('success', 'Application deleted successfully.');
+    return redirect()->route('application')->with('flash.banner', 'Application deleted successfully.');
 }
 public function showAll()
 {
@@ -113,7 +113,7 @@ public function show($id)
     
     // If the user doesn't have the required role or ownership, you can redirect or display an error message
     // For example:
-    return redirect()->back()->with('error', 'You are not authorized to view this page.');
+    return redirect()->back()->with('flash.banner', 'You are not authorized to view this page.');
     
 }
 public function approve($id)
@@ -122,11 +122,11 @@ public function approve($id)
         $appliance->approval_status = 'approved';
         $appliance->save();
     
-        $user = $appliance->user; // Assuming there is a relationship between the Appliance model and the User model
+        $user = $appliance->user; 
     
         Notification::send($user, new ApplicationApprovedNotification);
     
-        return redirect()->route('application')->with('success', 'Application approved successfully.');
+        return redirect()->route('application')->with('flash.banner', 'Application approved successfully.');
     }
 public function reject($id)
     {
@@ -134,7 +134,7 @@ public function reject($id)
         $appliance->approval_status = 'rejected';
         $appliance->save();
 
-        return redirect()->route('application')->with('success', 'Application rejected successfully.');
+        return redirect()->route('application')->with('flash.banner', 'Application rejected successfully.');
     }
     public function status()
 {
