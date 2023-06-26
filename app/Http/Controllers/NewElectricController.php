@@ -33,6 +33,12 @@ class NewElectricController extends Controller
   
     public function store(Request $request): RedirectResponse
 {
+    $validatedData = $request->validate([
+        'image' => 'required|image',
+        'item' => 'required|string',
+        'description' => 'required|string',
+        'rate' => 'required|numeric',
+    ]);
     $input = $request->all();
     if ($request->hasFile('image')) {
         $file = $request->file('image');

@@ -23,7 +23,11 @@
                     <div class="col md-8 text-center">
                       <center><img src="{{asset('image/logo.png')}}" class="img-fluid" style="height: 160px;" alt="welcome"></center>
                       <h1>Welcome !</h1>
-                        <h5 class="text-center mt-4"> {{ Auth::user()->name }}</h5>
+                        <h2 class="text-center mt-4"> {{ Auth::user()->name }}</h2>
+                        @if (Auth::user()->role == 0)
+                        <h5 class="text-center mt-4"> {{ Auth::user()->block }} {{ Auth::user()->room }}</h5>
+                        <p class="text-center mt-4"> {{ Auth::user()->course }}</p>
+                        @endif
                     </div>
                 </div>
             </div>

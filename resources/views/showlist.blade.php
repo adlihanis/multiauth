@@ -14,10 +14,12 @@
 @section('content')
     
 <form action="{{ route('application.search') }}" method="GET" class="mb-3">
-    <div class="input-group">
-        <input type="email" name="search" class="form-control custom-search-input" placeholder="Search by email (must include @)" value="{{ $search }}" required>
-        <button type="submit" class="btn btn-primary">Search</button>
-    </div>
+    @if(in_array(auth()->user()->role, [1, 2]))  
+        <div class="input-group">
+            <input type="email" name="search" class="form-control custom-search-input" placeholder="Search by email (must include @)" value="{{ $search }}" required>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    @endif
 </form>
 
 @if ($search)

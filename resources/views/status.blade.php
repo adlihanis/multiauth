@@ -20,7 +20,6 @@
                         <th>Name</th>
                         <th>Date and Time</th>
                         <th>Status</th>
-                        <th>Action</th>
                         <th>Link</th>
                     </tr>
                 </thead>
@@ -37,13 +36,6 @@
                                 @else
                                     <span class="text-muted">Pending Approval</span>
                                 @endif
-                            </td>
-                            <td>
-                                <form action="{{ route('delete', $appliance->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-primary" onclick="location.href='{{ route('application.show', ['id' => $appliance->id]) }}'">
